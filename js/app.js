@@ -1,0 +1,141 @@
+let D=load(),state={type:null,level:null,mode:null,qs:[],i:0,hits:0,correct:null,locked:false,shopCat:'equipacion',grid:null,path:[],target:[],daily:false};
+const A=document.getElementById('app'),mix=a=>[...a].sort(()=>Math.random()-.5),rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a,stats=id=>D.estadisticas[id]||{partidas:0,aciertos:0,respuestas:0};
+const today=()=>new Date().toLocaleDateString('sv-SE');
+function ensureDaily(){if(D.retosDiarios.fecha!==today())D.retosDiarios={fecha:today(),sumas:false,restas:false,sopa:false,premio:false};save(D)}
+function xpNeeded(level){return 260+(level-1)*85}
+function xpPanel(){const need=xpNeeded(D.nivelJugador),pct=Math.min(100,Math.round(D.xp/need*100));return `<div class="xp-card"><div class="xp-head"><b>Nivel ${D.nivelJugador}</b><span>${D.xp} / ${need} XP</span></div><div class="xp-track"><div class="xp-fill" style="width:${pct}%"></div></div><div class="next-gift">Próximo regalo: 🎁 sorpresa</div></div>`}
+const levelRewards={2:{type:'diamantes',amount:20,label:'20 diamantes'},3:{type:'item',id:'helmet_ninja',label:'Capucha ninja'},4:{type:'item',id:'weapon_sword',label:'Espada'},5:{type:'item',id:'outfit_ninja',label:'Equipación ninja'},6:{type:'item',id:'weapon_shield',label:'Escudo'},7:{type:'diamantes',amount:40,label:'40 diamantes'},8:{type:'item',id:'helmet_soldier',label:'Casco soldado'},9:{type:'diamantes',amount:60,label:'60 diamantes'},10:{type:'item',id:'outfit_space',label:'Equipación espacial'}};
+const ACHIEVEMENTS=[
+ {id:'first_game',icon:'🎮',name:'Primera partida',desc:'Termina una actividad',test:()=>totalGames()>=1,reward:5},
+ {id:'ten_correct',icon:'⭐',name:'Buen comienzo',desc:'Consigue 10 respuestas correctas',test:()=>D.totalAciertos>=10,reward:8},
+ {id:'fifty_correct',icon:'🏅',name:'Aprendiz constante',desc:'Consigue 50 respuestas correctas',test:()=>D.totalAciertos>=50,reward:15},
+ {id:'daily_complete',icon:'☀️',name:'Día completo',desc:'Completa los tres retos diarios',test:()=>D.retosDiarios.premio,reward:10},
+ {id:'level_3',icon:'🚀',name:'Nivel 3',desc:'Alcanza el nivel 3',test:()=>D.nivelJugador>=3,reward:12},
+ {id:'collector',icon:'🎒',name:'Coleccionista',desc:'Consigue 3 objetos',test:()=>D.inventario.length>=3,reward:15}
+];
+let pendingAchievements=[];
+function totalGames(){return Object.values(D.estadisticas||{}).reduce((n,s)=>n+(s.partidas||0),0)}
+function checkAchievements(){for(const a of ACHIEVEMENTS){if(!D.logros.includes(a.id)&&a.test()){D.logros.push(a.id);D.diamantes+=a.reward;pendingAchievements.push(a)}}save(D)}
+function showPendingAchievement(){if(!pendingAchievements.length)return false;const a=pendingAchievements.shift();layout(`<div class="levelup"><div class="levelup-stars">✨ 🏆 ✨</div><h2>¡Nuevo logro!</h2><div class="achievement-big">${a.icon}</div><h3>${a.name}</h3><p>${a.desc}</p><div class="daily-prize">+${a.reward} 💎</div><button class="btn primary" onclick="home()">Continuar</button></div>`);return true}
+function achievements(){checkAchievements();layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>Logros</h2><div class="achievement-list">${ACHIEVEMENTS.map(a=>{const ok=D.logros.includes(a.id);return `<div class="achievement-card ${ok?'unlocked':'locked'}"><div class="achievement-icon">${ok?a.icon:'🔒'}</div><div><b>${a.name}</b><div class="muted">${a.desc}</div><div class="achievement-reward">${ok?'Conseguido':'Premio: '+a.reward+' 💎'}</div></div></div>`}).join('')}</div>`) }
+function progressSummary(){const games=totalGames();return `<div class="progress-summary"><div><b>${D.totalAciertos}</b><span>Aciertos</span></div><div><b>${games}</b><span>Partidas</span></div><div><b>${D.logros.length}/${ACHIEVEMENTS.length}</b><span>Logros</span></div></div>`}
+
+let pendingLevelRewards=[];
+function giveXP(amount){D.xp+=amount;while(D.xp>=xpNeeded(D.nivelJugador)){D.xp-=xpNeeded(D.nivelJugador);D.nivelJugador++;const r=levelRewards[D.nivelJugador]||{type:'diamantes',amount:25,label:'25 diamantes'};if(r.type==='diamantes')D.diamantes+=r.amount;else if(!D.inventario.includes(r.id))D.inventario.push(r.id);pendingLevelRewards.push(r.label)}save(D)}
+function showPendingLevel(){if(!pendingLevelRewards.length)return false;const rewards=[...pendingLevelRewards];pendingLevelRewards=[];layout(`<div class="levelup"><div class="levelup-stars">✨ 🎉 ✨</div><h2>¡Has subido al nivel ${D.nivelJugador}!</h2><div class="gift-box">🎁</div><p>Has conseguido:</p><h3>${rewards.join('<br>')}</h3><button class="btn primary" onclick="home()">Continuar</button></div>`);return true}
+function dailyHTML(){ensureDaily();const r=D.retosDiarios,done=[r.sumas,r.restas,r.sopa].filter(Boolean).length;
+ const row=(type,done,label,time)=>`<button class="daily-row ${done?'done locked':''}" ${done?'disabled aria-disabled="true"':`onclick="startDaily('${type}')"`}><span>${done?'🔒 ✅':'⬜'} ${label}</span><small>${done?'Completado':time}</small></button>`;
+ return `<div class="daily-card"><div class="daily-title"><b>🎯 Retos de hoy</b><span>${done}/3</span></div>${row('suma',r.sumas,'5 sumas','2 min')}${row('resta',r.restas,'5 restas','2 min')}${row('sopa',r.sopa,'1 sopa de letras','2 min')}<div class="daily-prize">${r.premio?'🎁 Premio diario conseguido · vuelve mañana':'🎁 Completa los 3: +10 💎 y +10 XP'}</div></div>`}
+function dailyDifficulty(){
+ const step=Math.min(5,Math.floor((D.retosCompletadosTotal||0)/9));
+ return {mathMax:10+step*2,soupLevel:step<2?GAME.levels.sopa[0]:step<4?GAME.levels.sopa[1]:GAME.levels.sopa[2]}
+}
+function startDaily(type){
+ ensureDaily();const r=D.retosDiarios;if((type==='suma'&&r.sumas)||(type==='resta'&&r.restas)||(type==='sopa'&&r.sopa))return;
+ const dif=dailyDifficulty();
+ if(type==='suma')startMath('suma',{...GAME.levels.suma[0],max:dif.mathMax,desc:`Resultado hasta ${dif.mathMax}`},true);
+ else if(type==='resta')startMath('resta',{...GAME.levels.resta[0],max:dif.mathMax,desc:`Hasta ${dif.mathMax}, sin negativos`},true);
+ else startSoup(dif.soupLevel,true)
+}
+function markDaily(type){
+ ensureDaily();let added=false;
+ if(type==='suma'&&!D.retosDiarios.sumas){D.retosDiarios.sumas=true;added=true}
+ if(type==='resta'&&!D.retosDiarios.restas){D.retosDiarios.restas=true;added=true}
+ if(type==='sopa'&&!D.retosDiarios.sopa){D.retosDiarios.sopa=true;added=true}
+ if(added)D.retosCompletadosTotal=(D.retosCompletadosTotal||0)+1;
+ if(D.retosDiarios.sumas&&D.retosDiarios.restas&&D.retosDiarios.sopa&&!D.retosDiarios.premio){D.retosDiarios.premio=true;D.diamantes+=10;giveXP(10)}
+ save(D)
+}
+
+function diamond(flash=false){return `<div id="diamond" class="diamond ${flash?'flash':''}">💎 <span>${D.diamantes}</span></div>`}
+function layout(content){A.innerHTML=`<div class="wrap"><div class="card">${content}</div></div>`}
+let audioCtx=null;
+function playChime(kind='ok'){
+ try{
+  audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+  const now=audioCtx.currentTime,osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+  osc.type='sine';osc.frequency.setValueAtTime(kind==='ok'?660:220,now);osc.frequency.exponentialRampToValueAtTime(kind==='ok'?880:180,now+.11);
+  gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.055,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+.14);
+  osc.connect(gain).connect(audioCtx.destination);osc.start(now);osc.stop(now+.15);
+ }catch(e){}
+}
+function home(){ensureDaily();checkAchievements();if(showPendingLevel())return;if(showPendingAchievement())return;layout(`<div class="top"><div><h1>Aprendo jugando</h1><div class="muted">V1.6 prueba</div></div>${diamond()}</div>${xpPanel()}${progressSummary()}${dailyHTML()}<div class="hero"><div class="avatar-stage">${avatarHTML(D)}</div><div><h2>${D.perfil.nombre}</h2><p class="muted">Nivel ${D.nivelJugador}</p><p class="muted">${D.inventario.length} objetos conseguidos</p></div></div><h3>Jugar libremente</h3><div class="grid"><button class="btn primary" onclick="levels('suma')">➕ Sumas</button><button class="btn primary" onclick="levels('resta')">➖ Restas</button><button class="btn primary" onclick="letters()">🔤 Letras</button><button class="btn primary" onclick="levels('sopa')">🔎 Sopa de letras</button><div class="grid2"><button class="btn secondary" onclick="shop()">🎒 Tienda</button><button class="btn secondary" onclick="achievements()">🏆 Logros</button></div><button class="btn secondary" onclick="parents()">⚙️ Zona de padres</button></div>`) }
+function levels(t){state.type=t;const title=t==='suma'?'Niveles de sumas':t==='resta'?'Niveles de restas':'Sopa de letras';layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>${title}</h2><div class="levels">${GAME.levels[t].map(n=>{const s=stats(n.id),p=s.respuestas?Math.round(s.aciertos/s.respuestas*100):0;return `<div class="row"><div><b>${n.name}</b><div class="muted">${n.desc}</div><div class="muted">Jugado: ${s.partidas} · Aciertos: ${p}%</div></div><div class="actions"><button class="small play" onclick='${t==='sopa'?`startSoup(${JSON.stringify(n)})`:`startMath(${JSON.stringify(t)},${JSON.stringify(n)})`}'>Jugar</button><button class="small reset" onclick="resetLevel('${n.id}')">Reset</button></div></div>`}).join('')}</div>`)}
+function resetLevel(id){if(confirm('¿Borrar estadísticas?')){delete D.estadisticas[id];save(D);levels(state.type)}}
+function letters(){layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>Letras</h2><p class="muted">Mira la imagen y completa varias letras.</p><div class="grid"><button class="btn primary" onclick="startLetters('inicial')">Completar desde el inicio</button><button class="btn primary" onclick="startLetters('completar')">Completar letras ocultas</button></div>`)}
+function startMath(t,n,daily=false){state={...state,type:t,level:n,mode:null,qs:[],i:0,hits:0,daily};for(let a=1;a<=n.max;a++)for(let b=1;b<=n.max;b++){if(t==='suma'&&a+b<=n.max)state.qs.push({a,b,r:a+b});if(t==='resta'&&b<a)state.qs.push({a,b,r:a-b})}state.qs=mix(state.qs).slice(0,GAME.total);question()}
+function startLetters(m){state={...state,type:'letras',mode:m,level:null,qs:mix(GAME.words.filter(w=>w.word.length>=4)).slice(0,GAME.total),i:0,hits:0,daily:false,missing:[],missingStep:0,currentWord:null};question()}
+function question(){
+ state.locked=false;
+ if(state.i>=GAME.total)return finish();
+ const q=state.qs[state.i],isL=state.type==='letras';
+ if(isL){
+  state.currentWord=q;
+  const count=Math.min(q.word.length-1,state.mode==='inicial'?2:Math.max(2,Math.min(3,Math.floor(D.nivelJugador/4)+2)));
+  let positions=[];
+  if(state.mode==='inicial'){positions=[0,1].filter(x=>x<q.word.length)}
+  else{positions=mix([...Array(q.word.length).keys()]).slice(0,count).sort((a,b)=>a-b)}
+  state.missing=positions;state.missingStep=0;
+  renderLetterStep();
+  state.i++;return;
+ }
+ state.correct=q.r;
+ const prompt=`${q.a} ${state.type==='suma'?'+':'−'} ${q.b}`;
+ let s=new Set([q.r]);while(s.size<3){const v=q.r+rnd(-5,5);if(v>0)s.add(v)}
+ const opts=mix([...s]);
+ layout(`<div class="top"><button class="btn secondary back" onclick="levels('${state.type}')">← Salir</button>${diamond()}</div><div class="muted">Pregunta ${state.i+1} de ${GAME.total}</div><div class="question">${prompt}</div><div class="answers">${opts.map(o=>`<button class="answer" onclick="answer('${o}',this)">${o}</button>`).join('')}</div><div id="msg" class="muted" style="text-align:center;margin-top:14px;min-height:30px"></div>`);
+ state.i++
+}
+function renderLetterStep(){
+ const q=state.currentWord,pos=state.missing[state.missingStep];state.correct=q.word[pos];
+ const shown=[...q.word].map((ch,i)=>state.missing.includes(i)?(state.missing.indexOf(i)<state.missingStep?ch:'_'):ch).join('');
+ const letters='ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';let s=new Set([state.correct]);while(s.size<3)s.add(letters[rnd(0,letters.length-1)]);
+ const opts=mix([...s]);
+ layout(`<div class="top"><button class="btn secondary back" onclick="letters()">← Salir</button>${diamond()}</div><div class="muted">Palabra ${state.i+1} de ${GAME.total} · letra ${state.missingStep+1} de ${state.missing.length}</div><div class="image-box only-image">${q.icon}</div><div class="question letter-word">${shown}</div><div class="answers">${opts.map(o=>`<button class="answer" onclick="answerLetter('${o}',this)">${o}</button>`).join('')}</div><div id="msg" class="muted" style="text-align:center;margin-top:14px;min-height:30px"></div>`)
+}
+function answerLetter(v,b){
+ if(state.locked)return;
+ if(String(v)===String(state.correct)){
+  b.classList.add('correct');playChime('ok');state.missingStep++;
+  document.getElementById('msg').textContent='¡Bien!';
+  if(state.missingStep>=state.missing.length){state.locked=true;state.hits++;rewardOne();setTimeout(question,750)}
+  else setTimeout(()=>{state.locked=false;renderLetterStep()},450)
+ }else{
+  b.classList.add('wrong');playChime('bad');document.getElementById('msg').textContent='Prueba otra vez';
+  setTimeout(()=>b.classList.remove('wrong'),450)
+ }
+}
+function answer(v,b){if(state.locked)return;state.locked=true;if(String(v)===String(state.correct)){state.hits++;rewardOne();b.classList.add('correct');document.getElementById('msg').textContent='¡Muy bien! +1 💎'}else{b.classList.add('wrong');document.getElementById('msg').textContent='Era '+state.correct;document.querySelectorAll('.answer').forEach(x=>{if(String(x.textContent)===String(state.correct))x.classList.add('correct')})}setTimeout(question,900)}
+function rewardOne(){D.diamantes++;D.totalAciertos++;giveXP(2);save(D);playChime('ok');animateDiamond()}
+function animateDiamond(){const el=document.getElementById('diamond');if(el){el.querySelector('span').textContent=D.diamantes;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}const t=document.createElement('div');t.className='toast';t.textContent='+1 💎';document.body.appendChild(t);setTimeout(()=>t.remove(),900)}
+function finish(){
+ if(state.type!=='letras'){const s=stats(state.level.id);s.partidas++;s.aciertos+=state.hits;s.respuestas+=GAME.total;D.estadisticas[state.level.id]=s}
+ const perfect=state.hits===GAME.total,bonus=perfect?5:3,xp=5+(perfect?5:0);
+ D.diamantes+=bonus;giveXP(xp);if(state.daily)markDaily(state.type);checkAchievements();save(D);
+ layout(`<div class="top"><h2>¡Actividad terminada!</h2>${diamond(true)}</div><div class="question" style="font-size:3rem">${state.hits} de ${GAME.total}</div><p style="text-align:center;font-size:1.3rem">+${bonus} 💎 · +${xp} XP</p><div class="grid"><button class="btn primary" onclick="${state.daily?'home()':state.type==='letras'?`startLetters('${state.mode}')`:`startMath('${state.type}',${JSON.stringify(state.level)})`}">${state.daily?'Volver a los retos':'Jugar otra vez'}</button><button class="btn secondary" onclick="${state.type==='letras'?'letters()':`levels('${state.type}')`}">Volver al menú</button></div>`)
+}
+
+function startSoup(n,daily=false){state={...state,type:'sopa',level:n,mode:null,qs:mix(GAME.words.filter(w=>w.word.length<=n.size)).slice(0,daily?1:3),i:0,hits:0,daily};soupQuestion()}
+function soupQuestion(){if(state.i>=state.qs.length)return finishSoup();state.locked=false;state.path=[];const q=state.qs[state.i];const built=buildGrid(q.word,state.level.size,state.level.dirs);state.grid=built.grid;state.target=built.target;const cols=`repeat(${state.level.size},1fr)`;layout(`<div class="top"><button class="btn secondary back" onclick="levels('sopa')">← Salir</button>${diamond()}</div><div class="muted">Palabra ${state.i+1} de ${state.qs.length}</div><div class="word-target"><div class="word-picture">${q.icon}</div><div><div class="word-name">${q.word}</div><div class="word-hint">Toca la primera y la última letra.</div></div></div><div id="wordGrid" class="word-grid" style="grid-template-columns:${cols}">${built.grid.flatMap((row,r)=>row.map((letter,c)=>`<button class="word-cell" data-r="${r}" data-c="${c}" onclick="pickSoup(${r},${c})">${letter}</button>`)).join('')}</div><div id="wordStatus" class="word-status"></div>`)}
+function buildGrid(word,size,dirs){const grid=Array.from({length:size},()=>Array(size).fill(''));const dir=dirs[rnd(0,dirs.length-1)];let dr=0,dc=1;if(dir==='v'){dr=1;dc=0}if(dir==='hr'){dr=0;dc=-1}if(dir==='vr'){dr=-1;dc=0}const maxR=dr===1?size-word.length:dr===-1?word.length-1:size-1;const minR=dr===-1?word.length-1:0;const maxC=dc===1?size-word.length:dc===-1?word.length-1:size-1;const minC=dc===-1?word.length-1:0;const sr=rnd(minR,maxR),sc=rnd(minC,maxC),target=[];[...word].forEach((ch,i)=>{const r=sr+dr*i,c=sc+dc*i;grid[r][c]=ch;target.push([r,c])});const abc='ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(!grid[r][c])grid[r][c]=abc[rnd(0,abc.length-1)];return{grid,target}}
+function pickSoup(r,c){if(state.locked)return;const p=state.path;if(!p.length){state.path=[[r,c]];paintPath();document.getElementById('wordStatus').textContent='Ahora toca la última letra.';return}const start=p[0],line=getLine(start,[r,c]);state.path=line;paintPath();const ok=samePath(line,state.target)||samePath([...line].reverse(),state.target);if(ok){state.locked=true;state.hits++;rewardOne();document.getElementById('wordStatus').textContent='¡Encontrada! +1 💎';line.forEach(([rr,cc])=>cellAt(rr,cc).classList.add('found'));state.i++;setTimeout(soupQuestion,1050)}else{document.getElementById('wordStatus').textContent='Prueba otra vez.';setTimeout(()=>{state.path=[];paintPath();document.getElementById('wordStatus').textContent=''},550)}}
+function getLine(a,b){const dr=Math.sign(b[0]-a[0]),dc=Math.sign(b[1]-a[1]);if(!(a[0]===b[0]||a[1]===b[1]))return[a,b];const len=Math.max(Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]))+1;return Array.from({length:len},(_,i)=>[a[0]+dr*i,a[1]+dc*i])}
+function samePath(a,b){return a.length===b.length&&a.every((p,i)=>p[0]===b[i][0]&&p[1]===b[i][1])}
+function cellAt(r,c){return document.querySelector(`.word-cell[data-r="${r}"][data-c="${c}"]`)}
+function paintPath(){document.querySelectorAll('.word-cell').forEach(x=>x.classList.remove('selected'));state.path.forEach(([r,c])=>{const x=cellAt(r,c);if(x)x.classList.add('selected')})}
+function finishSoup(){
+ const s=stats(state.level.id);s.partidas++;s.aciertos+=state.hits;s.respuestas+=state.qs.length;D.estadisticas[state.level.id]=s;
+ const perfect=state.hits===state.qs.length,bonus=perfect?5:3,xp=5+(perfect?5:0);
+ D.diamantes+=bonus;giveXP(xp);if(state.daily)markDaily('sopa');checkAchievements();save(D);
+ layout(`<div class="top"><h2>¡Sopa completada!</h2>${diamond(true)}</div><div class="question" style="font-size:3rem">${state.hits} de ${state.qs.length}</div><p style="text-align:center;font-size:1.3rem">+${bonus} 💎 · +${xp} XP</p><div class="grid"><button class="btn primary" onclick="${state.daily?'home()':`startSoup(${JSON.stringify(state.level)})`}">${state.daily?'Volver a los retos':'Jugar otra vez'}</button><button class="btn secondary" onclick="levels('sopa')">Volver a niveles</button></div>`)
+}
+
+function itemPreview(i){if(i.cat==='arma'||i.cat==='escudo')return `<div class="item-preview ${i.cat}"><div class="preview-glow"></div><div class="item-icon icon-${i.id}">${i.icon}</div></div>`;const cls=i.cat==='casco'?'helmet-swatch':'item-swatch';return `<div class="item-preview"><div class="preview-glow"></div><div class="${cls} ${i.className}"><i></i><b></b></div></div>`}
+function shop(cat=state.shopCat){state.shopCat=cat;const cats=['equipacion','casco','arma','escudo'];layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>Tienda</h2><div class="hero"><div class="avatar-stage">${avatarHTML(D)}</div><div><b>Tu avatar</b><p class="muted">Combina ropa, casco, arma y escudo.</p><button class="small reset" onclick="clearEquip()">Quitar todo</button></div></div><div class="tabs">${cats.map(c=>`<button class="btn secondary tab ${c===cat?'active':''}" onclick="shop('${c}')">${c}</button>`).join('')}</div><div class="shop">${GAME.items.filter(i=>i.cat===cat).map(i=>{const own=D.inventario.includes(i.id),eq=D.equipado[i.cat]===i.id;return `<div class="shop-card">${itemPreview(i)}<div class="shop-info"><b>${i.name}</b><div class="shop-price">${own?(eq?'Equipado':'Comprado'):i.price+' 💎'}</div></div><button class="small buy" onclick="buy('${i.id}')">${own?(eq?'Quitar':'Equipar'):'Comprar'}</button></div>`}).join('')}</div>`)}
+function buy(id){const i=GAME.items.find(x=>x.id===id),own=D.inventario.includes(id),eq=D.equipado[i.cat]===id;if(!own){if(D.diamantes<i.price)return alert('No tienes suficientes diamantes');D.diamantes-=i.price;D.inventario.push(id);D.equipado[i.cat]=id}else D.equipado[i.cat]=eq?null:id;checkAchievements();save(D);shop(i.cat)}
+function clearEquip(){D.equipado={equipacion:null,casco:null,arma:null,escudo:null};save(D);shop()}
+function parents(){layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>Zona de padres</h2><div class="grid"><button class="btn secondary" onclick="exportData()">Exportar progreso</button><label class="btn secondary" style="text-align:center">Importar progreso<input type="file" accept="application/json" hidden onchange="importData(event)"></label><button class="btn reset" onclick="wipe()">Borrar todo el progreso</button></div>`)}
+function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,2)],{type:'application/json'}));a.download='progreso-roki.json';a.click()}
+function importData(e){const r=new FileReader();r.onload=()=>{try{D=JSON.parse(r.result);save(D);alert('Progreso importado');home()}catch{alert('Archivo no válido')}};r.readAsText(e.target.files[0])}
+function wipe(){if(confirm('¿Borrar todo el progreso?')){localStorage.removeItem(STORE);D=load();home()}}
+home();
