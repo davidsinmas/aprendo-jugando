@@ -187,7 +187,38 @@ function shop(cat=state.shopCat){state.shopCat=cat;const cats=['equipacion','cas
 `)}
 function buy(id){const i=GAME.items.find(x=>x.id===id),own=D.inventario.includes(id),eq=D.equipado[i.cat]===id;if(!own){if(D.diamantes<i.price)return alert('No tienes suficientes diamantes');D.diamantes-=i.price;D.inventario.push(id);D.equipado[i.cat]=id}else D.equipado[i.cat]=eq?null:id;checkAchievements();save(D);shop(i.cat)}
 function clearEquip(){D.equipado={equipacion:null,casco:null,arma:null,escudo:null};save(D);shop()}
-function parents(){layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>Zona de padres</h2><div class="grid"><button class="btn secondary" onclick="exportData()">Exportar progreso</button><label class="btn secondary" style="text-align:center">Importar progreso<input type="file" accept="application/json" hidden onchange="importData(event)"></label><button class="btn reset" onclick="wipe()">Borrar todo el progreso</button></div>`)}
+function parents(){layout(`
+<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div>
+<h2>Zona de padres</h2>
+<div class="parent-grid">
+  <div class="parent-card">
+    <h3>💎 Diamantes</h3>
+    <p class="muted">Ajusta la cantidad para probar la tienda.</p>
+    <div class="diamond-editor">
+      <button class="btn secondary compact" onclick="changeDiamonds(-100)">−100</button>
+      <input id="diamondInput" type="number" min="0" step="10" value="${D.diamantes}">
+      <button class="btn secondary compact" onclick="changeDiamonds(100)">+100</button>
+    </div>
+    <div class="grid2">
+      <button class="btn secondary" onclick="setDiamonds()">Aplicar</button>
+      <button class="btn secondary" onclick="changeDiamonds(500)">+500</button>
+    </div>
+  </div>
+  <div class="parent-card">
+    <h3>💾 Progreso</h3>
+    <div class="grid">
+      <button class="btn secondary" onclick="exportData()">Exportar progreso</button>
+      <label class="btn secondary" for="importFile">Importar progreso</label>
+      <input id="importFile" type="file" accept=".json,application/json" onchange="importData(event)" style="display:none">
+    </div>
+  </div>
+  <div class="parent-card">
+    <h3>⚠️ Reinicio</h3>
+    <button class="btn danger" onclick="resetAll()">Borrar todo el progreso</button>
+  </div>
+</div>`)}
+function changeDiamonds(n){D.diamantes=Math.max(0,(D.diamantes||0)+n);save(D);const i=document.getElementById('diamondInput');if(i)i.value=D.diamantes;const b=document.querySelector('.diamond');if(b)b.innerHTML=`💎 ${D.diamantes}`}
+function setDiamonds(){const i=document.getElementById('diamondInput');if(!i)return;D.diamantes=Math.max(0,parseInt(i.value||'0',10)||0);save(D);const b=document.querySelector('.diamond');if(b)b.innerHTML=`💎 ${D.diamantes}`}
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,2)],{type:'application/json'}));a.download='progreso-roki.json';a.click()}
 function importData(e){const r=new FileReader();r.onload=()=>{try{D=JSON.parse(r.result);save(D);alert('Progreso importado');home()}catch{alert('Archivo no válido')}};r.readAsText(e.target.files[0])}
 function wipe(){if(confirm('¿Borrar todo el progreso?')){localStorage.removeItem(STORE);D=load();home()}}

@@ -48,8 +48,8 @@ function avatarHTML(d){
   <div class="shoe l"><span></span><i></i><b class="laces"></b><em></em></div>
   <div class="shoe r"><span></span><i></i><b class="laces"></b><em></em></div>
 
-  ${outfit?`<div class="layer outfit ${outfit.className}"><i></i><b></b><span></span></div>`:''}
-  ${helmet?`<div class="layer helmet ${helmet.className}"><i></i><b></b><span></span></div>`:''}
+  ${outfit?`<div class="layer outfit ${outfit.className}"><i></i><b></b><span></span><em></em><strong></strong><u></u></div>`:''}
+  ${helmet?`<div class="layer helmet ${helmet.className}"><i></i><b></b><span></span><em></em></div>`:''}
   ${weapon?`<div class="layer weapon weapon-${weapon.id}">${weaponArt(weapon.id)}</div>`:''}
   ${shield?`<div class="layer shield shield-${shield.id}">${shieldArt(shield.id)}</div>`:''}
  </div>`
