@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "set": {
+    "id": "caballero_espacial",
+    "name": "Caballero Espacial",
+    "quality": "comun",
+    "sourceStyle": "arte_aprobado",
+    "assetType": "catalog_icon",
+    "iconCanvas": {
+      "width": 512,
+      "height": 512
+    }
+  },
+  "items": [
+    {
+      "id": "ce_comun_casco",
+      "category": "casco",
+      "name": "Casco espacial común",
+      "priceDiamonds": 15,
+      "image": "assets/equipment/caballero_espacial/comun/casco.png"
+    },
+    {
+      "id": "ce_comun_pecho",
+      "category": "pecho",
+      "name": "Peto espacial común",
+      "priceDiamonds": 20,
+      "image": "assets/equipment/caballero_espacial/comun/pecho.png"
+    },
+    {
+      "id": "ce_comun_guantes",
+      "category": "guantes",
+      "name": "Guantes espaciales comunes",
+      "priceDiamonds": 12,
+      "image": "assets/equipment/caballero_espacial/comun/guantes.png"
+    },
+    {
+      "id": "ce_comun_cinturon",
+      "category": "cinturon",
+      "name": "Cinturón espacial común",
+      "priceDiamonds": 10,
+      "image": "assets/equipment/caballero_espacial/comun/cinturon.png"
+    },
+    {
+      "id": "ce_comun_pierneras",
+      "category": "pierneras",
+      "name": "Pierneras espaciales comunes",
+      "priceDiamonds": 15,
+      "image": "assets/equipment/caballero_espacial/comun/pierneras.png"
+    },
+    {
+      "id": "ce_comun_botas",
+      "category": "botas",
+      "name": "Botas espaciales comunes",
+      "priceDiamonds": 12,
+      "image": "assets/equipment/caballero_espacial/comun/botas.png"
+    },
+    {
+      "id": "ce_comun_capa",
+      "category": "capa",
+      "name": "Capa espacial común",
+      "priceDiamonds": 18,
+      "image": "assets/equipment/caballero_espacial/comun/capa.png"
+    },
+    {
+      "id": "ce_comun_espada",
+      "category": "arma",
+      "name": "Espada espacial común",
+      "priceDiamonds": 18,
+      "image": "assets/equipment/caballero_espacial/comun/espada.png"
+    },
+    {
+      "id": "ce_comun_arma_energia",
+      "category": "arma",
+      "name": "Arma de energía común",
+      "priceDiamonds": 20,
+      "image": "assets/equipment/caballero_espacial/comun/arma_energia.png"
+    },
+    {
+      "id": "ce_comun_escudo",
+      "category": "escudo",
+      "name": "Escudo estelar común",
+      "priceDiamonds": 18,
+      "image": "assets/equipment/caballero_espacial/comun/escudo.png"
+    }
+  ]
+}

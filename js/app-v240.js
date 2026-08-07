@@ -71,7 +71,7 @@ function playChime(kind='ok'){
 }
 function home(){ensureDaily();checkAchievements();if(showPendingLevel())return;if(showPendingAchievement())return;layout(`
 <div class="home-head">
-  <div class="brand"><div class="brand-mark">AJ</div><div><h1>Aprendo jugando</h1><div class="muted">V2.1 · Diseño renovado</div></div></div>
+  <div class="brand"><div class="brand-mark">AJ</div><div><h1>Aprendo jugando</h1><div class="muted">V2.4 · Equipamiento visual</div></div></div>
   ${diamond()}
 </div>
 ${xpPanel()}

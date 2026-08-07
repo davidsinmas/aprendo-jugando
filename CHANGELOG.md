@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## 2.3.0 — 2026-08-07
+
+- La tienda deja de usar el equipamiento dibujado antiguo.
+- El avatar usa `assets/avatar/base/avatar_base.png`.
+- Se integran los PNG del Caballero Espacial Común.
+- Nuevas ranuras: casco, pecho, guantes, cinturón, pierneras, botas, capa, arma y escudo.
+- Recompensas de nivel actualizadas al nuevo catálogo.
+- Migración del almacenamiento a esquema 7.
+
 ## 2.2.0 — 2026-08-07
 
 - Equipaciones y accesorios visualmente más realistas y espectaculares.

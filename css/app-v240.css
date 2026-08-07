@@ -537,3 +537,13 @@ h2{letter-spacing:-.025em}
  padding:30px 18px;text-align:center;color:var(--muted);border:1px dashed var(--line);
  border-radius:18px;background:#faf8f3
 }
+
+/* V2.4 equipamiento sobre avatar */
+.avatar-layered{overflow:hidden}
+.avatar-layer-canvas{position:relative;width:100%;height:100%;display:grid;place-items:center;overflow:visible}
+.avatar-layer-canvas .avatar-photo{position:relative;z-index:20;max-width:88%;max-height:96%;width:auto;height:auto;object-fit:contain}
+.avatar-equip-layer{position:absolute;height:auto;object-fit:contain;pointer-events:none;transform-origin:center center;filter:drop-shadow(0 5px 5px rgba(11,25,33,.22))}
+.layer-capa{filter:drop-shadow(0 7px 6px rgba(11,25,33,.28))}
+.layer-arma{filter:drop-shadow(0 0 5px rgba(83,206,235,.40)) drop-shadow(0 6px 5px rgba(11,25,33,.22))}
+.layer-escudo{filter:drop-shadow(0 8px 6px rgba(11,25,33,.28))}
+.shop-avatar .avatar-layer-canvas{height:100%}

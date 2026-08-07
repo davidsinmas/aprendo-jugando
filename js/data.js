@@ -7,17 +7,15 @@ const GAME={
  },
  words:[['GATO','🐱'],['PATO','🦆'],['CASA','🏠'],['MESA','🪑'],['MANO','✋'],['LUNA','🌙'],['SOPA','🥣'],['CAMA','🛏️'],['SOL','☀️'],['PERA','🍐'],['PERRO','🐶'],['RANA','🐸'],['VACA','🐮'],['LEON','🦁'],['OSO','🐻'],['PEZ','🐟'],['RATON','🐭'],['MONO','🐵'],['CERDO','🐷'],['OVEJA','🐑'],['TIGRE','🐯'],['PANDA','🐼'],['ZORRO','🦊'],['KOALA','🐨'],['POLLO','🐤'],['ABEJA','🐝'],['FLOR','🌸'],['ARBOL','🌳'],['HOJA','🍃'],['NUBE','☁️'],['NIEVE','❄️'],['FUEGO','🔥'],['MAR','🌊'],['ISLA','🏝️'],['PAN','🍞'],['QUESO','🧀'],['HUEVO','🥚'],['LECHE','🥛'],['UVA','🍇'],['FRESA','🍓'],['COCHE','🚗'],['BARCO','🚢'],['TREN','🚆'],['AVION','✈️'],['BICI','🚲'],['BUS','🚌'],['RELOJ','⌚'],['LLAVE','🔑'],['LIBRO','📘'],['LAPIZ','✏️']].map(([word,icon])=>({word,icon})),
  items:[
-  {id:'outfit_ninja',name:'Equipación ninja',cat:'equipacion',price:80,className:'ninja'},
-  {id:'outfit_soldier',name:'Equipación soldado',cat:'equipacion',price:90,className:'soldier'},
-  {id:'outfit_knight',name:'Equipación caballero',cat:'equipacion',price:110,className:'knight'},
-  {id:'outfit_space',name:'Guerrero espacial',cat:'equipacion',price:130,className:'space'},
-  {id:'helmet_ninja',name:'Capucha ninja',cat:'casco',price:12,className:'ninja'},
-  {id:'helmet_soldier',name:'Casco soldado',cat:'casco',price:16,className:'soldier'},
-  {id:'helmet_knight',name:'Casco caballero',cat:'casco',price:20,className:'knight'},
-  {id:'helmet_space',name:'Casco espacial',cat:'casco',price:25,className:'space'},
-  {id:'weapon_sword',name:'Espada',cat:'arma',price:15,icon:'🗡️'},
-  {id:'weapon_shield',name:'Escudo real',cat:'escudo',price:18,icon:'🛡️'},
-  {id:'weapon_staff',name:'Bastón',cat:'arma',price:20,icon:'🪄'},
-  {id:'weapon_energy',name:'Espada de energía',cat:'arma',price:30,icon:'⚔️'}
+  {id:'ce_comun_casco',name:'Casco espacial común',cat:'casco',price:15,image:'assets/equipment/caballero_espacial/comun/casco.png',quality:'comun'},
+  {id:'ce_comun_pecho',name:'Peto espacial común',cat:'pecho',price:20,image:'assets/equipment/caballero_espacial/comun/pecho.png',quality:'comun'},
+  {id:'ce_comun_guantes',name:'Guantes espaciales comunes',cat:'guantes',price:12,image:'assets/equipment/caballero_espacial/comun/guantes.png',quality:'comun'},
+  {id:'ce_comun_cinturon',name:'Cinturón espacial común',cat:'cinturon',price:10,image:'assets/equipment/caballero_espacial/comun/cinturon.png',quality:'comun'},
+  {id:'ce_comun_pierneras',name:'Pierneras espaciales comunes',cat:'pierneras',price:15,image:'assets/equipment/caballero_espacial/comun/pierneras.png',quality:'comun'},
+  {id:'ce_comun_botas',name:'Botas espaciales comunes',cat:'botas',price:12,image:'assets/equipment/caballero_espacial/comun/botas.png',quality:'comun'},
+  {id:'ce_comun_capa',name:'Capa espacial común',cat:'capa',price:18,image:'assets/equipment/caballero_espacial/comun/capa.png',quality:'comun'},
+  {id:'ce_comun_espada',name:'Espada espacial común',cat:'arma',price:18,image:'assets/equipment/caballero_espacial/comun/espada.png',quality:'comun'},
+  {id:'ce_comun_arma_energia',name:'Arma de energía común',cat:'arma',price:20,image:'assets/equipment/caballero_espacial/comun/arma_energia.png',quality:'comun'},
+  {id:'ce_comun_escudo',name:'Escudo estelar común',cat:'escudo',price:18,image:'assets/equipment/caballero_espacial/comun/escudo.png',quality:'comun'}
  ]
 };

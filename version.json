@@ -1,8 +1,8 @@
 {
   "app": "Aprendo Jugando",
-  "version": "2.3.2",
+  "version": "2.4.1-test",
   "dataSchema": 7,
-  "channel": "main",
+  "channel": "test",
   "published": "2026-08-07",
-  "notes": "Carga forzada de recursos nuevos mediante nombres de archivo versionados."
+  "notes": "Test visual para confirmar inventario/equipamiento."
 }
