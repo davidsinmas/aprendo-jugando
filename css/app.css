@@ -433,3 +433,68 @@ h2{letter-spacing:-.025em}
  .item-preview{width:88px!important;height:82px!important}
  .bottom-actions{grid-template-columns:1fr}
 }
+
+/* V2.2 — equipamiento espectacular + control de diamantes */
+.parent-grid{display:grid;gap:14px}.parent-card{background:linear-gradient(180deg,#fffdfa,#f3efe6);border:1px solid rgba(104,117,110,.18);border-radius:22px;padding:18px;box-shadow:0 8px 20px rgba(48,60,54,.06),inset 0 1px 0 white}.diamond-editor{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin:14px 0}.diamond-editor input{width:100%;border:1px solid #cfd8d4;border-radius:14px;padding:13px 12px;font-size:1.2rem;font-weight:900;text-align:center;background:#fff}.danger{background:linear-gradient(180deg,#c96868,#a84e4e);box-shadow:0 4px 0 #823e3e;color:#fff}
+
+.outfit{overflow:hidden;box-shadow:inset 8px 7px 14px rgba(255,255,255,.10),inset -8px -10px 16px rgba(0,0,0,.18),0 3px 8px rgba(25,32,31,.15)!important}
+.outfit i,.outfit b,.outfit span,.outfit em,.outfit strong,.outfit u,.helmet em{position:absolute;display:block;text-decoration:none}
+
+/* Ninja */
+.outfit.ninja{background:linear-gradient(145deg,#30343a,#111418 74%)!important}
+.outfit.ninja i{left:11px;right:11px;top:16px;height:42px;border-radius:9px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 3px,transparent 3px 7px);border:1px solid rgba(255,255,255,.05)}
+.outfit.ninja b{left:7px;right:7px;bottom:24px;height:14px;background:linear-gradient(#7d3030,#4a1b1b);transform:skewY(-4deg)}
+.outfit.ninja span{left:15px;right:15px;top:62px;height:3px;background:#7a3030;box-shadow:0 10px 0 #7a3030}
+.outfit.ninja em,.outfit.ninja strong{top:32px;width:13px;height:30px;border-radius:7px;background:#3a3f45;border:1px solid #111417}
+.outfit.ninja em{left:2px}.outfit.ninja strong{right:2px}
+.outfit.ninja u{left:33px;top:24px;width:19px;height:19px;border-radius:50%;background:radial-gradient(circle,#b04646 0 30%,#5d2020 31% 100%);box-shadow:0 0 8px rgba(168,55,55,.35)}
+
+/* Soldado */
+.outfit.soldier{background:linear-gradient(145deg,#7b896f,#465545 72%)!important}
+.outfit.soldier:after{content:"";position:absolute;inset:5px;background:repeating-linear-gradient(90deg,rgba(30,44,29,.22) 0 9px,rgba(80,99,75,.18) 9px 18px);border-radius:15px}
+.outfit.soldier i{left:10px;top:17px;width:28px;height:30px;border-radius:5px;background:#4e5b48;border:1px solid #354032;box-shadow:36px 0 0 #4e5b48}
+.outfit.soldier b{left:9px;bottom:17px;width:31px;height:22px;border-radius:5px;background:#64715d;border:1px solid #414c3e;box-shadow:36px 0 0 #64715d}
+.outfit.soldier span{left:6px;right:6px;top:51px;height:9px;background:#2e392f}
+.outfit.soldier em,.outfit.soldier strong{top:20px;width:18px;height:21px;border-radius:10px;background:#65725e;border:2px solid #43503f}
+.outfit.soldier em{left:-2px}.outfit.soldier strong{right:-2px}
+.outfit.soldier u{left:37px;top:5px;width:13px;height:16px;background:#b3aa74;clip-path:polygon(50% 0,100% 30%,80% 100%,20% 100%,0 30%)}
+
+/* Caballero */
+.outfit.knight{background:linear-gradient(145deg,#c5cdd1,#737f86 74%)!important;border:2px solid #59666d!important}
+.outfit.knight:after{content:"";position:absolute;inset:3px;background:linear-gradient(115deg,rgba(255,255,255,.35),transparent 28%,rgba(0,0,0,.12) 68%);border-radius:18px}
+.outfit.knight i{left:13px;right:13px;top:12px;height:45px;border-radius:12px 12px 8px 8px;border:2px solid #67757b;background:linear-gradient(180deg,#c8d0d3,#88949a)}
+.outfit.knight b{left:7px;right:7px;bottom:9px;height:25px;background:repeating-linear-gradient(90deg,#6e7980 0 11px,#98a3a8 11px 22px);clip-path:polygon(0 0,100% 0,92% 100%,78% 62%,65% 100%,50% 62%,35% 100%,22% 62%,8% 100%)}
+.outfit.knight span{left:10px;right:10px;top:48px;height:8px;background:#6a757b;border-top:2px solid #d1d8db}
+.outfit.knight em,.outfit.knight strong{top:18px;width:20px;height:31px;border-radius:50% 50% 35% 35%;background:linear-gradient(145deg,#c2c9cc,#6f7a80);border:2px solid #5c676d}
+.outfit.knight em{left:0}.outfit.knight strong{right:0}
+.outfit.knight u{left:33px;top:23px;width:20px;height:28px;background:#b13939;clip-path:polygon(50% 0,100% 22%,84% 100%,16% 100%,0 22%)}
+
+/* Guerrero espacial */
+.outfit.space{background:linear-gradient(145deg,#f4f2ec,#abb5bf)!important;border:7px solid #4d5d69!important;box-shadow:inset 9px 7px 12px rgba(255,255,255,.55),inset -7px -8px 14px rgba(54,67,77,.20)!important}
+.outfit.space i{left:12px;right:12px;top:16px;height:39px;border-radius:9px;background:linear-gradient(180deg,#fbfaf5,#c4cbd0);border:2px solid #65737d}
+.outfit.space b{left:15px;bottom:20px;width:20px;height:17px;border-radius:4px;background:#34444f;box-shadow:36px 0 0 #34444f}
+.outfit.space span{left:10px;right:10px;top:55px;height:8px;background:#3f4e59}
+.outfit.space em{left:25px;top:27px;width:35px;height:8px;border-radius:999px;background:linear-gradient(90deg,#2e8aa0,#69d2e5);box-shadow:0 0 8px rgba(65,186,213,.6)}
+.outfit.space strong{left:5px;top:27px;width:14px;height:20px;border-radius:5px;background:#8a3030}
+.outfit.space u{right:5px;top:27px;width:14px;height:20px;border-radius:5px;background:#2d5f87}
+
+/* Cascos */
+.helmet.ninja{background:linear-gradient(145deg,#2c3034,#101315)!important;border:2px solid #090b0d!important}.helmet.ninja:after{content:"";position:absolute;left:7px;right:7px;top:27px;height:14px;background:#15191b;border-top:2px solid #7c3030}.helmet.ninja em{left:14px;right:14px;top:30px;height:5px;border-radius:5px;background:#8b3838}
+.helmet.soldier{background:linear-gradient(145deg,#839078,#4b5948)!important;border:2px solid #394437!important}.helmet.soldier:after{content:"";position:absolute;left:4px;right:4px;bottom:5px;height:12px;border-radius:0 0 12px 12px;background:#3d493b}.helmet.soldier em{left:18px;top:6px;width:34px;height:7px;border-radius:7px;background:#a3ad97}
+.helmet.knight{background:linear-gradient(145deg,#c8d0d3,#748087)!important;border:2px solid #58636a!important}.helmet.knight:after{content:"";position:absolute;left:5px;right:5px;top:27px;height:18px;background:repeating-linear-gradient(90deg,#4b565b 0 4px,#a4adb0 4px 8px);border-top:2px solid #5e696f}.helmet.knight em{left:29px;top:-16px;width:12px;height:28px;background:#8b3030;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.helmet.space{background:linear-gradient(145deg,#f3f1ec,#b5bdc5)!important;border:5px solid #53616b!important}.helmet.space:after{content:"";position:absolute;left:8px;right:8px;top:18px;height:28px;border-radius:12px;background:linear-gradient(180deg,#243b48,#142832 72%);box-shadow:inset 0 5px 8px rgba(100,196,224,.18)}.helmet.space em{left:13px;right:13px;top:22px;height:4px;border-radius:999px;background:#4ec3df;box-shadow:0 0 8px rgba(78,195,223,.9)}
+
+/* Armas */
+.weapon-weapon_sword .blade{background:linear-gradient(90deg,#737f85 0%,#e7ecee 22%,#fff 49%,#bfc8cc 70%,#69767d 100%)!important;box-shadow:0 0 4px rgba(255,255,255,.9)}
+.weapon-weapon_sword .guard{background:linear-gradient(180deg,#f1cf68,#a86f20)!important}
+.weapon-weapon_sword .grip{background:repeating-linear-gradient(180deg,#4f2e23 0 4px,#a8754b 4px 6px,#2d1d18 6px 9px)!important}
+.weapon-weapon_staff .staff-gem{background:radial-gradient(circle at 35% 28%,#fff4ff,#d58cf4 35%,#884ca7 70%,#4d2d61)!important;box-shadow:0 0 7px #b56eda,0 0 17px rgba(181,110,218,.65)}
+.weapon-weapon_energy .energy-blade{background:#e9fdff!important;box-shadow:0 0 4px #fff,0 0 10px #68e5ff,0 0 22px #41c9ff,0 0 35px rgba(52,179,255,.65)!important}
+.weapon-weapon_energy .energy-grip{background:repeating-linear-gradient(180deg,#242c31 0 6px,#6a747b 6px 8px,#151b1e 8px 13px)!important}
+
+/* Escudo */
+.shield-face{background:linear-gradient(145deg,#d2a949,#7f5b22)!important;filter:drop-shadow(0 7px 4px rgba(26,39,42,.28))!important}.shield-face:after{background:radial-gradient(circle at 50% 32%,rgba(98,193,226,.28),transparent 20%),linear-gradient(145deg,#476f87,#193d51)!important}.shield-face i{background:linear-gradient(180deg,#ffe58b,#c68d29)!important}
+
+/* Previews tienda */
+.item-swatch.ninja,.helmet-swatch.ninja{background:linear-gradient(145deg,#30353a,#111416)!important}.item-swatch.soldier,.helmet-swatch.soldier{background:linear-gradient(145deg,#819076,#455444)!important}.item-swatch.knight,.helmet-swatch.knight{background:linear-gradient(145deg,#c3cbce,#748087)!important}.item-swatch.space,.helmet-swatch.space{background:linear-gradient(145deg,#f0efe9,#aeb7c0)!important;border-color:#50606b!important}
+.item-swatch.ninja:before{content:"";position:absolute;left:10px;right:10px;bottom:14px;height:8px;background:#742c2c}.item-swatch.soldier:before{content:"";position:absolute;left:8px;top:18px;width:18px;height:16px;background:#4b5947;box-shadow:31px 0 0 #4b5947}.item-swatch.knight:before{content:"";position:absolute;left:19px;top:20px;width:25px;height:32px;background:#9ba5a9;border:2px solid #677279;border-radius:8px}.item-swatch.space:before{content:"";position:absolute;left:12px;right:12px;top:20px;height:9px;border-radius:999px;background:#4cc4df;box-shadow:0 0 7px rgba(76,196,223,.65)}
