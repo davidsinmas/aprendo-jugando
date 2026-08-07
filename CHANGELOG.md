@@ -1,5 +1,12 @@
 # Historial de cambios
 
+## 2.2.0 — 2026-08-07
+
+- Equipaciones y accesorios visualmente más realistas y espectaculares.
+- Armas y escudo rediseñados.
+- Control manual de diamantes en Zona de padres.
+- Sin cambios en la lógica de juegos ni guardado.
+
 ## 2.1.0 — 2026-08-07
 
 - Renovación visual de la pantalla principal.
