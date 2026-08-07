@@ -59,7 +59,37 @@ function playChime(kind='ok'){
   osc.connect(gain).connect(audioCtx.destination);osc.start(now);osc.stop(now+.15);
  }catch(e){}
 }
-function home(){ensureDaily();checkAchievements();if(showPendingLevel())return;if(showPendingAchievement())return;layout(`<div class="top"><div><h1>Aprendo jugando</h1><div class="muted">V1.6 prueba</div></div>${diamond()}</div>${xpPanel()}${progressSummary()}${dailyHTML()}<div class="hero"><div class="avatar-stage">${avatarHTML(D)}</div><div><h2>${D.perfil.nombre}</h2><p class="muted">Nivel ${D.nivelJugador}</p><p class="muted">${D.inventario.length} objetos conseguidos</p></div></div><h3>Jugar libremente</h3><div class="grid"><button class="btn primary" onclick="levels('suma')">➕ Sumas</button><button class="btn primary" onclick="levels('resta')">➖ Restas</button><button class="btn primary" onclick="letters()">🔤 Letras</button><button class="btn primary" onclick="levels('sopa')">🔎 Sopa de letras</button><div class="grid2"><button class="btn secondary" onclick="shop()">🎒 Tienda</button><button class="btn secondary" onclick="achievements()">🏆 Logros</button></div><button class="btn secondary" onclick="parents()">⚙️ Zona de padres</button></div>`) }
+function home(){ensureDaily();checkAchievements();if(showPendingLevel())return;if(showPendingAchievement())return;layout(`
+<div class="home-head">
+  <div class="brand"><div class="brand-mark">AJ</div><div><h1>Aprendo jugando</h1><div class="muted">V2.1 · Diseño renovado</div></div></div>
+  ${diamond()}
+</div>
+${xpPanel()}
+<div class="dashboard-grid">
+  <div class="dashboard-main">
+    ${dailyHTML()}
+    <div class="hero premium-hero">
+      <div class="avatar-stage">${avatarHTML(D)}</div>
+      <div class="hero-copy">
+        <div class="eyebrow-label">TU PERSONAJE</div>
+        <h2>${D.perfil.nombre}</h2>
+        <div class="level-pill">Nivel ${D.nivelJugador}</div>
+        <p class="muted">${D.inventario.length} objetos en tu colección</p>
+        <button class="btn secondary compact" onclick="shop()">Personalizar avatar</button>
+      </div>
+    </div>
+  </div>
+  <div class="dashboard-side">${progressSummary()}<button class="btn secondary side-action" onclick="achievements()">🏆 Ver logros</button></div>
+</div>
+<h3 class="section-title">Juegos</h3>
+<div class="game-grid">
+  <button class="game-card game-sum" onclick="levels('suma')"><span class="game-icon">＋</span><b>Sumas</b><small>5 preguntas</small></button>
+  <button class="game-card game-sub" onclick="levels('resta')"><span class="game-icon">−</span><b>Restas</b><small>5 preguntas</small></button>
+  <button class="game-card game-letters" onclick="letters()"><span class="game-icon">Aa</span><b>Letras</b><small>Completa palabras</small></button>
+  <button class="game-card game-soup" onclick="levels('sopa')"><span class="game-icon">▦</span><b>Sopa de letras</b><small>Encuentra palabras</small></button>
+</div>
+<div class="bottom-actions"><button class="btn secondary" onclick="shop()">🎒 Tienda</button><button class="btn secondary" onclick="parents()">⚙️ Zona de padres</button></div>
+`) }
 function levels(t){state.type=t;const title=t==='suma'?'Niveles de sumas':t==='resta'?'Niveles de restas':'Sopa de letras';layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>${title}</h2><div class="levels">${GAME.levels[t].map(n=>{const s=stats(n.id),p=s.respuestas?Math.round(s.aciertos/s.respuestas*100):0;return `<div class="row"><div><b>${n.name}</b><div class="muted">${n.desc}</div><div class="muted">Jugado: ${s.partidas} · Aciertos: ${p}%</div></div><div class="actions"><button class="small play" onclick='${t==='sopa'?`startSoup(${JSON.stringify(n)})`:`startMath(${JSON.stringify(t)},${JSON.stringify(n)})`}'>Jugar</button><button class="small reset" onclick="resetLevel('${n.id}')">Reset</button></div></div>`}).join('')}</div>`)}
 function resetLevel(id){if(confirm('¿Borrar estadísticas?')){delete D.estadisticas[id];save(D);levels(state.type)}}
 function letters(){layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>Letras</h2><p class="muted">Mira la imagen y completa varias letras.</p><div class="grid"><button class="btn primary" onclick="startLetters('inicial')">Completar desde el inicio</button><button class="btn primary" onclick="startLetters('completar')">Completar letras ocultas</button></div>`)}
@@ -130,8 +160,31 @@ function finishSoup(){
  layout(`<div class="top"><h2>¡Sopa completada!</h2>${diamond(true)}</div><div class="question" style="font-size:3rem">${state.hits} de ${state.qs.length}</div><p style="text-align:center;font-size:1.3rem">+${bonus} 💎 · +${xp} XP</p><div class="grid"><button class="btn primary" onclick="${state.daily?'home()':`startSoup(${JSON.stringify(state.level)})`}">${state.daily?'Volver a los retos':'Jugar otra vez'}</button><button class="btn secondary" onclick="levels('sopa')">Volver a niveles</button></div>`)
 }
 
-function itemPreview(i){if(i.cat==='arma'||i.cat==='escudo')return `<div class="item-preview ${i.cat}"><div class="preview-glow"></div><div class="item-icon icon-${i.id}">${i.icon}</div></div>`;const cls=i.cat==='casco'?'helmet-swatch':'item-swatch';return `<div class="item-preview"><div class="preview-glow"></div><div class="${cls} ${i.className}"><i></i><b></b></div></div>`}
-function shop(cat=state.shopCat){state.shopCat=cat;const cats=['equipacion','casco','arma','escudo'];layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>Tienda</h2><div class="hero"><div class="avatar-stage">${avatarHTML(D)}</div><div><b>Tu avatar</b><p class="muted">Combina ropa, casco, arma y escudo.</p><button class="small reset" onclick="clearEquip()">Quitar todo</button></div></div><div class="tabs">${cats.map(c=>`<button class="btn secondary tab ${c===cat?'active':''}" onclick="shop('${c}')">${c}</button>`).join('')}</div><div class="shop">${GAME.items.filter(i=>i.cat===cat).map(i=>{const own=D.inventario.includes(i.id),eq=D.equipado[i.cat]===i.id;return `<div class="shop-card">${itemPreview(i)}<div class="shop-info"><b>${i.name}</b><div class="shop-price">${own?(eq?'Equipado':'Comprado'):i.price+' 💎'}</div></div><button class="small buy" onclick="buy('${i.id}')">${own?(eq?'Quitar':'Equipar'):'Comprar'}</button></div>`}).join('')}</div>`)}
+function itemPreview(i){
+ if(i.cat==='arma'){
+  const art=i.id==='weapon_sword'?'<span class="mini-blade"></span><span class="mini-guard"></span><span class="mini-grip"></span>':
+            i.id==='weapon_staff'?'<span class="mini-staff"></span><span class="mini-gem"></span>':
+            '<span class="mini-energy"></span><span class="mini-energy-grip"></span>';
+  return `<div class="item-preview ${i.cat} art-${i.id}"><div class="preview-glow"></div><div class="weapon-preview-art">${art}</div></div>`
+ }
+ if(i.cat==='escudo')return `<div class="item-preview escudo"><div class="preview-glow"></div><div class="shield-preview-art"><span></span><i></i></div></div>`;
+ const cls=i.cat==='casco'?'helmet-swatch':'item-swatch';
+ return `<div class="item-preview ${i.cat}"><div class="preview-glow"></div><div class="${cls} ${i.className}"><i></i><b></b><span></span></div></div>`
+}
+function shop(cat=state.shopCat){state.shopCat=cat;const cats=['equipacion','casco','arma','escudo'];layout(`
+<div class="top shop-head"><button class="btn secondary back" onclick="home()">← Volver</button><div><h2>Tienda</h2><div class="muted">Elige, compra y combina</div></div>${diamond()}</div>
+<div class="shop-layout">
+  <div class="shop-avatar-panel">
+    <div class="avatar-stage shop-avatar">${avatarHTML(D)}</div>
+    <div class="shop-avatar-caption"><b>${D.perfil.nombre}</b><span>Vista previa en directo</span></div>
+    <button class="small reset" onclick="clearEquip()">Quitar todo</button>
+  </div>
+  <div class="shop-browser">
+    <div class="tabs">${cats.map(c=>`<button class="btn secondary tab ${c===cat?'active':''}" onclick="shop('${c}')">${c}</button>`).join('')}</div>
+    <div class="shop">${GAME.items.filter(i=>i.cat===cat).map(i=>{const own=D.inventario.includes(i.id),eq=D.equipado[i.cat]===i.id;return `<div class="shop-card ${own?'owned':''} ${eq?'equipped':''}">${itemPreview(i)}<div class="shop-info"><b>${i.name}</b><div class="shop-price">${own?(eq?'✓ Equipado':'En tu colección'):i.price+' 💎'}</div></div><button class="small buy" onclick="buy('${i.id}')">${own?(eq?'Quitar':'Equipar'):'Comprar'}</button></div>`}).join('')}</div>
+  </div>
+</div>
+`)}
 function buy(id){const i=GAME.items.find(x=>x.id===id),own=D.inventario.includes(id),eq=D.equipado[i.cat]===id;if(!own){if(D.diamantes<i.price)return alert('No tienes suficientes diamantes');D.diamantes-=i.price;D.inventario.push(id);D.equipado[i.cat]=id}else D.equipado[i.cat]=eq?null:id;checkAchievements();save(D);shop(i.cat)}
 function clearEquip(){D.equipado={equipacion:null,casco:null,arma:null,escudo:null};save(D);shop()}
 function parents(){layout(`<div class="top"><button class="btn secondary back" onclick="home()">← Volver</button>${diamond()}</div><h2>Zona de padres</h2><div class="grid"><button class="btn secondary" onclick="exportData()">Exportar progreso</button><label class="btn secondary" style="text-align:center">Importar progreso<input type="file" accept="application/json" hidden onchange="importData(event)"></label><button class="btn reset" onclick="wipe()">Borrar todo el progreso</button></div>`)}
