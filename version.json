@@ -1,8 +1,8 @@
 {
   "app": "Aprendo Jugando",
-  "version": "2.2.0",
-  "dataSchema": 6,
+  "version": "2.3.2",
+  "dataSchema": 7,
   "channel": "main",
   "published": "2026-08-07",
-  "notes": "Equipaciones, cascos, armas y escudo más realistas; control de diamantes en Zona de padres."
+  "notes": "Carga forzada de recursos nuevos mediante nombres de archivo versionados."
 }
