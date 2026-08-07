@@ -1,7 +1,8 @@
 {
   "app": "Aprendo Jugando",
-  "version": "2.0.0-base",
+  "version": "2.1.0",
   "dataSchema": 6,
   "channel": "main",
-  "published": "2026-08-06"
+  "published": "2026-08-07",
+  "notes": "Renovación estética: pantalla principal, avatar y tienda."
 }
