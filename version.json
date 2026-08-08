@@ -1,8 +1,8 @@
 {
   "app": "Aprendo Jugando",
-  "version": "2.4.1-test",
+  "version": "2.4.2-avatar-pilot",
   "dataSchema": 7,
   "channel": "test",
-  "published": "2026-08-07",
-  "notes": "Test visual para confirmar inventario/equipamiento."
+  "published": "2026-08-08",
+  "notes": "Primer render paper-doll real: avatar base + capas prealineadas de casco y pecho. Sin usar iconos de tienda como capas."
 }

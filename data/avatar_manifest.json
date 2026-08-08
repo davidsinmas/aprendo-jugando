@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "avatarId": "caballero_espacial_base",
+  "canvas": { "width": 1024, "height": 1024 },
+  "coordinateOrigin": "top-left",
+  "base": "assets/avatar/base/avatar_base.png",
+  "rules": {
+    "sameCanvasForEveryLayer": true,
+    "fixedPose": true,
+    "fixedScale": true,
+    "fixedOrigin": true,
+    "transparentBackground": true,
+    "runtimeCalibration": false,
+    "catalogImagesAreAvatarLayers": false
+  },
+  "layerOrder": {
+    "capa": 10,
+    "pierneras": 30,
+    "pecho": 40,
+    "botas": 50,
+    "guantes": 60,
+    "escudo": 70,
+    "casco": 80,
+    "arma": 90,
+    "efectos": 100
+  },
+  "readyLayers": [
+    {
+      "itemId": "ce_comun_pecho",
+      "slot": "pecho",
+      "z": 40,
+      "file": "assets/equipment/caballero_espacial/comun/layers/pecho.png"
+    },
+    {
+      "itemId": "ce_comun_casco",
+      "slot": "casco",
+      "z": 80,
+      "file": "assets/equipment/caballero_espacial/comun/layers/casco.png"
+    }
+  ]
+}
